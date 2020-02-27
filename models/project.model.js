@@ -9,6 +9,7 @@ const projectSchema = new Schema(
     statys: { type: String, required: false },
     workers: { type: String, required: false },
     salaries: { type: Number, required: false },
+    rating: { type: Number, required: false }
     //userImage: String
   }
 )

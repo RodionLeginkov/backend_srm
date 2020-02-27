@@ -9,10 +9,12 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+      max: 255,
+      //match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+
     },
-    password: { type: String, required: true },
-    login: { type: String, required: false },
+    password: { type: String, required: true, min: 6 },
+    login: { type: String, required: false, max: 255 },
     skype: { type: String, required: false },
     github: { type: String, required: false },
     phoneNumber: { type: Number, required: false },

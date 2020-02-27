@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+const verify = require("../middleware/check-auth")
 
 let Project = require("../models/project.model")
 
@@ -22,31 +23,58 @@ router.route("/").get(async (req, res) => {
 
 
 
-/*router.route("/addproject").post((req, res) => {
+router.post("/addproject", async (req, res) => {
   try {
 
-    const name = req.body.name;
-    const statys = req.body.statys;
-    const workers = Number(req.body.workers);
-    const salaries = req.body.salaries;
+    const newproject = new Project({
+      _id: new mongoose.Types.ObjectId(),
+      name: req.body.name,
+      statys: req.body.statys,
+      workers: req.body.workers,
+      salaries: req.body.salaries,
+      rating: req.body.rating
+    })
+    const savedProject = await newproject.save()
+    res.status(201).json({ message: "Created project successfully" })
 
-    const newExercise = new Exercise({
-      username,
-      description,
-      duration,
-      date
-    });
 
-    newExercise
-      .save()
-      .then(() => res.json("Exercise added!"))
-  } catch (err => res.status(400).json("Error: " + err));
+  } catch (err) { res.status(400).json("Error: " + err) };
 });
-*/
+
 
 //DELETE PROJECT
+router.delete("/:projectId", async (req, res, next) => {
+  try {
+    const project = await Project.remove({ _id: req.params.projectId })
+    res.status(200).json({ message: "User deleted" })
 
+  }
+  catch (err) {
+    res.status(500).json("Error: " + err)
+  };
+});
 
 
 //CHANGE PROJECT 
+
+router.patch("/:projectId", verify, async (req, res, next) => {
+  try {
+    const id = req.params.projectId;
+    const updateOps = {};
+
+
+    for (const ops of req.body) {
+      console.log("hello")
+      updateOps[ops.propName] = ops.value;
+      console.log(ops.value)
+    }
+
+    Project.update({ _id: id }, { $set: updateOps })
+    res.status(200).json({ message: "Project updated" })
+  } catch (err) {
+    res.status(500).json("Error: " + err)
+  };
+})
+
+
 module.exports = router;
