@@ -29,7 +29,7 @@ router.post("/addproject", async (req, res) => {
     const newproject = new Project({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
-      statys: req.body.statys,
+      status: req.body.status,
       stack: req.body.stack,
       price: req.body.price,
       rating: req.body.rating,
@@ -58,20 +58,14 @@ router.delete("/:projectId", async (req, res, next) => {
 
 //CHANGE PROJECT 
 
-router.patch("/:projectId", verify, async (req, res, next) => {
+router.patch("/:projectId", async (req, res, next) => {
   try {
     const id = req.params.projectId;
-    const updateOps = {};
+    console.log(req.body)
 
 
-    for (const ops of req.body) {
-      console.log("hello")
-      updateOps[ops.propName] = ops.value;
-      console.log(ops.value)
-    }
-
-    Project.update({ _id: id }, { $set: updateOps })
-    res.status(200).json({ message: "Project updated" })
+    const result = await Project.update({ _id: id }, { $set: req.body })
+    res.status(200).json("Project updates")
   } catch (err) {
     res.status(500).json("Error: " + err)
   };
