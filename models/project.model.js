@@ -7,9 +7,10 @@ const projectSchema = new Schema(
     _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: false },
     statys: { type: String, required: false },
-    workers: { type: String, required: false },
-    salaries: { type: Number, required: false },
-    rating: { type: Number, required: false }
+    stack: { type: String, required: false },
+    price: { type: Number, required: false },
+    rating: { type: Number, required: false },
+    description: { type: Number, required: false }
     //userImage: String
   }
 )

@@ -30,9 +30,10 @@ router.post("/addproject", async (req, res) => {
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
       statys: req.body.statys,
-      workers: req.body.workers,
-      salaries: req.body.salaries,
-      rating: req.body.rating
+      stack: req.body.stack,
+      price: req.body.price,
+      rating: req.body.rating,
+      description: req.body.description
     })
     const savedProject = await newproject.save()
     res.status(201).json({ message: "Created project successfully" })
