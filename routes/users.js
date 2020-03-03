@@ -193,7 +193,7 @@ router.post("/update/:usersId", async (req, res, next) => {
     user.skype = req.body.skype;
     user.github = req.body.github;
     user.phoneNumber = Number(req.body.phoneNumber);
-    user.project = req.body.project
+    user.currentProject = req.body.currentProject
 
     const savedUser = await user.save()
     res.json("Information updated!");

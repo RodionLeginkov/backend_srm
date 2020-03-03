@@ -18,7 +18,7 @@ const userSchema = new Schema(
     skype: { type: String, required: false },
     github: { type: String, required: false },
     phoneNumber: { type: Number, required: false },
-    project: { type: String, required: false }
+    currentProject: { type: String, required: false }
     //userImage: String
   }
 )

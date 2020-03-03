@@ -9,7 +9,6 @@ const projectSchema = new Schema(
     status: { type: String, required: false },
     stack: { type: String, required: false },
     price: { type: Number, required: false },
-    rating: { type: Number, required: false },
     description: { type: String, required: false }
     //userImage: String
   }

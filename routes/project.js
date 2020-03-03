@@ -15,6 +15,17 @@ router.route("/").get(async (req, res) => {
   }
 })
 
+router.route("/:projectId").get(async (req, res) => {
+  try {
+    const project = await Project.find({ _id: req.params.projectId })
+    res.status(200).json({ project })
+
+  }
+  catch (err) {
+    res.status(500).json("Error: " + err)
+  };
+})
+
 
 //ADD MIDDLEWARE (CHECK-AUTH) WHERE IT NEEDS (PRIVATE FUNCTION)
 //CHECK LOGIN WHEN YOU WORK WITH PROJECT 
@@ -32,12 +43,12 @@ router.post("/addproject", async (req, res) => {
       status: req.body.status,
       stack: req.body.stack,
       price: req.body.price,
-      rating: req.body.rating,
       description: req.body.description
     })
     const savedProject = await newproject.save()
-    res.status(201).json({ message: "Created project successfully" })
-
+    //res.status(201).json({ message: "Created project successfully" })
+    //const info = await Project.find()
+    res.json(newproject)
 
   } catch (err) { res.status(400).json("Error: " + err) };
 });
