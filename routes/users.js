@@ -23,7 +23,7 @@ router.post("/signup", async (req, res, next) => {
     const user = new User({
       _id: new mongoose.Types.ObjectId(),
       email: req.body.email,
-      password: hashedPassword
+      password: hashedPassword,
     })
     try {
       const savedUser = await user.save();
@@ -52,14 +52,9 @@ router.post("/login", async (req, res) => {
 
 
   //Create and assign a token
-  const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET)
-  process.env.TOKEN_SECRET, {
-    expiresIn: "6h"
-  }
-  res.header("auth-token", token).send(token)
-
-
-
+  const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
+  console.log(token);
+  res.header("tokens", token).send(token)
   res.send("Logged in")
 })
 
