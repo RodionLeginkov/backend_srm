@@ -178,10 +178,8 @@ router.route("/").get(async (req, res) => {
 
 /////////////////////////////////////////////////////////////////
 router.post("/update/:usersId", async (req, res, next) => {
-  //console.log('REQ', req.params.userId)
   try {
     const user = await User.findById(req.params.usersId);
-    console.log('USER', user)
     user.login = req.body.login;
     user.skype = req.body.skype;
     user.github = req.body.github;

@@ -48,7 +48,6 @@ router.post("/addproject", verify, async (req, res) => {
     })
     const { userId } = res.locals;
     const user = await User.findById(userId);
-    console.log(user.isAdmin)
     if (!user.isAdmin) throw 'not admin'
     const savedProject = await newproject.save()
     //res.status(201).json({ message: "Created project successfully" })
