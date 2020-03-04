@@ -9,6 +9,7 @@ const projectSchema = new Schema(
     status: { type: String, required: false },
     stack: { type: Array, required: false },
     price: { type: Number, required: false },
+    duration: { type: String, required: false},
     description: { type: String, required: false }
     //userImage: String
   }

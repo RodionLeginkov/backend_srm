@@ -13,6 +13,7 @@ module.exports = function (req, res, next) {
     // console.log(process.env.TOKEN_SECRET)
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);
     //console.log(verified)
+    res.locals.userId = verified._id;
     req.user = verified;
     //console.log("SUCCESS")
     next();

@@ -2,7 +2,7 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const verify = require("../middleware/check-auth")
-
+let User = require("../models/users.model");
 let Project = require("../models/project.model")
 
 router.route("/",verify).get(async (req, res) => {
@@ -36,14 +36,20 @@ router.route("/:projectId").get(async (req, res) => {
 
 router.post("/addproject", verify, async (req, res) => {
   try {
+
     const newproject = new Project({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
       status: req.body.status,
       stack: req.body.stack,
       price: req.body.price,
+      duration: req.body.description,
       description: req.body.description
     })
+    const { userId } = res.locals;
+    const user = await User.findById(userId);
+    console.log(user.isAdmin)
+    if (!user.isAdmin) throw 'not admin'
     const savedProject = await newproject.save()
     //res.status(201).json({ message: "Created project successfully" })
     //const info = await Project.find()
