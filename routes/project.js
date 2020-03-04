@@ -2,10 +2,10 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const verify = require("../middleware/check-auth")
-
+let User = require("../models/users.model");
 let Project = require("../models/project.model")
 
-router.route("/").get(async (req, res) => {
+router.route("/",verify).get(async (req, res) => {
   try {
     const info = await Project.find()
     res.json(info)
@@ -13,6 +13,17 @@ router.route("/").get(async (req, res) => {
   catch (err) {
     res.status(400).json("Error: " + err)
   }
+})
+
+router.route("/:projectId").get(async (req, res) => {
+  try {
+    const project = await Project.find({ _id: req.params.projectId })
+    res.status(200).json({ project })
+
+  }
+  catch (err) {
+    res.status(500).json("Error: " + err)
+  };
 })
 
 
@@ -23,20 +34,26 @@ router.route("/").get(async (req, res) => {
 
 
 
-router.post("/addproject", async (req, res) => {
+router.post("/addproject", verify, async (req, res) => {
   try {
 
     const newproject = new Project({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
-      statys: req.body.statys,
-      workers: req.body.workers,
-      salaries: req.body.salaries,
-      rating: req.body.rating
+      status: req.body.status,
+      stack: req.body.stack,
+      price: req.body.price,
+      duration: req.body.description,
+      description: req.body.description
     })
+    const { userId } = res.locals;
+    const user = await User.findById(userId);
+    console.log(user.isAdmin)
+    if (!user.isAdmin) throw 'not admin'
     const savedProject = await newproject.save()
-    res.status(201).json({ message: "Created project successfully" })
-
+    //res.status(201).json({ message: "Created project successfully" })
+    //const info = await Project.find()
+    res.json(newproject)
 
   } catch (err) { res.status(400).json("Error: " + err) };
 });
@@ -57,20 +74,12 @@ router.delete("/:projectId", async (req, res, next) => {
 
 //CHANGE PROJECT 
 
-router.patch("/:projectId", verify, async (req, res, next) => {
+router.patch("/:projectId", async (req, res, next) => {
   try {
     const id = req.params.projectId;
-    const updateOps = {};
 
-
-    for (const ops of req.body) {
-      console.log("hello")
-      updateOps[ops.propName] = ops.value;
-      console.log(ops.value)
-    }
-
-    Project.update({ _id: id }, { $set: updateOps })
-    res.status(200).json({ message: "Project updated" })
+    const result = await Project.update({ _id: id }, { $set: req.body })
+    res.status(200).json("Project updates")
   } catch (err) {
     res.status(500).json("Error: " + err)
   };

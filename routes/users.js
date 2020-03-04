@@ -8,28 +8,33 @@ let User = require("../models/users.model");
 
 
 router.post("/signup", async (req, res, next) => {
-  const { error } = registerValidation(req.body)
-  if (error) return res.status(400).send(error.details[0].message)
-
-  //cheking if the user is already in the database
-  const emailExist = await User.findOne({ email: req.body.email })
-  if (emailExist) return res.status(400).send("Email already exists");
-
-  //const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-  //create a new user
-  const user = new User({
-    _id: new mongoose.Types.ObjectId(),
-    email: req.body.email,
-    password: hashedPassword
-  })
   try {
-    const savedUser = await user.save();
-    res.send({ user: user._id });
+    const { error } = registerValidation(req.body)
+    if (error) return res.status(400).send(error.details[0].message)
+
+    //cheking if the user is already in the database
+    const emailExist = await User.findOne({ email: req.body.email })
+    if (emailExist) return res.status(400).send("Email already exists");
+
+    //const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    //create a new user
+    const user = new User({
+      _id: new mongoose.Types.ObjectId(),
+      email: req.body.email,
+      password: hashedPassword,
+    })
+    try {
+      const savedUser = await user.save();
+      res.send({ user: user._id });
+    }
+    catch (err) {
+      res.status(400).send(err);
+    }
   }
-  catch (err) {
-    res.status(400).send(err);
+  catch (error) {
+    res.status(400).send(error)
   }
 })
 
@@ -47,12 +52,8 @@ router.post("/login", async (req, res) => {
 
 
   //Create and assign a token
-  const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET)
-  res.header("auth-token", token).send(token)
-
-
-
-  res.send("Logged in")
+  const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
+  res.send(token)
 })
 
 
@@ -185,7 +186,7 @@ router.post("/update/:usersId", async (req, res, next) => {
     user.skype = req.body.skype;
     user.github = req.body.github;
     user.phoneNumber = Number(req.body.phoneNumber);
-    user.project = req.body.project
+    user.currentProject = req.body.currentProject
 
     const savedUser = await user.save()
     res.json("Information updated!");

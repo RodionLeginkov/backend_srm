@@ -10,7 +10,7 @@ const userSchema = new Schema(
       required: true,
       unique: true,
       max: 255,
-      //match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+      match: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
 
     },
     password: { type: String, required: true, min: 6 },
@@ -18,7 +18,8 @@ const userSchema = new Schema(
     skype: { type: String, required: false },
     github: { type: String, required: false },
     phoneNumber: { type: Number, required: false },
-    project: { type: String, required: false }
+    currentProject: { type: String, required: false },
+    isAdmin:{type:Boolean, default:false}
     //userImage: String
   }
 )
