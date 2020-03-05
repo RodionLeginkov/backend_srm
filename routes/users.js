@@ -174,6 +174,16 @@ router.route("/").get(async (req, res) => {
     res.status(400).json("Error: " + err)
   }
 });
+router.route("/:usersId").get(async (req, res) => {
+  try {
+    const info = await User.find({ _id: req.params.usersId })
+    res.status(200).json({ info })
+
+  }
+  catch (err) {
+    res.status(500).json("Error: " + err)
+  };
+})
 
 
 /////////////////////////////////////////////////////////////////

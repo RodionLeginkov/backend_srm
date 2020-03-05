@@ -4,9 +4,13 @@ const jwt = require("jsonwebtoken");
 const verify = require("../middleware/check-auth")
 let User = require("../models/users.model");
 let Project = require("../models/project.model")
-
+//router.post("/addproject", verify, async (req, res) => {
 router.route("/",verify).get(async (req, res) => {
+//router.get("/", verify,async(req, res) => {
   try {
+    //const { userId } = res.locals;
+    // const user = await User.findById(userId);
+    //if (!user.isAdmin) throw 'not admin'
     const info = await Project.find()
     res.json(info)
   }
@@ -15,7 +19,8 @@ router.route("/",verify).get(async (req, res) => {
   }
 })
 
-router.route("/:projectId").get(async (req, res) => {
+
+router.route("/:projectId",verify).get(async (req, res) => {
   try {
     const project = await Project.find({ _id: req.params.projectId })
     res.status(200).json({ project })
@@ -25,6 +30,7 @@ router.route("/:projectId").get(async (req, res) => {
     res.status(500).json("Error: " + err)
   };
 })
+
 
 
 //ADD MIDDLEWARE (CHECK-AUTH) WHERE IT NEEDS (PRIVATE FUNCTION)
@@ -48,7 +54,7 @@ router.post("/addproject", verify, async (req, res) => {
     })
     const { userId } = res.locals;
     const user = await User.findById(userId);
-    //if (!user.isAdmin) throw 'not admin'
+    if (!user.isAdmin) throw 'not admin'
     const savedProject = await newproject.save()
     //res.status(201).json({ message: "Created project successfully" })
     //const info = await Project.find()
