@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt")
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken")
 const { registerValidation, loginValidation } = require("./validation")
+const sgMail = require('@sendgrid/mail')
 let User = require("../models/users.model");
 
 
@@ -55,6 +56,19 @@ router.post("/login", async (req, res) => {
   const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
   res.send(token)
 })
+
+///////////////////////////////////////////////////////
+// router.post("/forget", async (req,res) =>{
+//   const { error } = loginValidation(req.body)
+//   if (error) return res.status(400).send(error.details[0].message);
+
+//   //cheking if the email exists
+//   const user = await User.findOne({ email: req.body.email })
+//   if (!user) return res.status(400).send("Email or password is wrong");
+
+
+
+// })
 
 
 
@@ -193,8 +207,11 @@ router.post("/update/:usersId", async (req, res, next) => {
     user.login = req.body.login;
     user.skype = req.body.skype;
     user.github = req.body.github;
-    user.phoneNumber = Number(req.body.phoneNumber);
-    user.currentProject = req.body.currentProject
+    user.phoneNumber = req.body.phoneNumber;
+    user.currentProject = req.body.currentProject;
+    user.stack = req.body.stack;
+    user.status = req.body.status;
+    user.country = req.body.country;
 
     const savedUser = await user.save()
     res.json("Information updated!");
@@ -203,6 +220,17 @@ router.post("/update/:usersId", async (req, res, next) => {
     res.status(400).json("Error: " + err)
 
   }
+})
+
+router.patch("/:usersId", async (req, res, next) => {
+  try {
+    const id = req.params.usersId;
+
+    const result = await User.update({ _id: id }, { $set: req.body })
+    res.status(200).json("User updates")
+  } catch (err) {
+    res.status(500).json("Error: " + err)
+  };
 })
 
 

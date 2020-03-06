@@ -19,6 +19,9 @@ const userSchema = new Schema(
     github: { type: String, required: false },
     phoneNumber: { type: Number, required: false },
     currentProject: { type: String, required: false },
+    stack:{ type: Array, required:false},
+    status:{ type:String, required:false},
+    country:{ type:String, required:false},
     isAdmin:{type:Boolean, default:false}
     //userImage: String
   }
