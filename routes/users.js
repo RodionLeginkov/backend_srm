@@ -7,6 +7,15 @@ const sgMail = require('@sendgrid/mail')
 let User = require("../models/users.model");
 
 
+/**
+ * @swagger
+ * /signup:
+ *  post:
+ *    description: Use to add new users
+ *    responses:
+ *      '200':
+ *        description: A successful response
+ */
 
 router.post("/signup", async (req, res, next) => {
   try {
