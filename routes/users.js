@@ -4,8 +4,34 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken")
 const { registerValidation, loginValidation } = require("./validation")
 const sgMail = require('@sendgrid/mail')
+const multer = require('multer')
 let User = require("../models/users.model");
 
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function(req, file, cb) {
+    cb(null, new Date().toISOString() + file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // reject a file
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter: fileFilter
+});
 
 /**
  * @swagger
@@ -210,20 +236,37 @@ router.route("/:usersId").get(async (req, res) => {
 
 
 /////////////////////////////////////////////////////////////////
-router.post("/update/:usersId", async (req, res, next) => {
+router.post("/update/:usersId", upload.single("userImage"), async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.usersId);
-    user.login = req.body.login;
-    user.skype = req.body.skype;
-    user.github = req.body.github;
-    user.phoneNumber = req.body.phoneNumber;
-    user.currentProject = req.body.currentProject;
-    user.stack = req.body.stack;
-    user.status = req.body.status;
-    user.country = req.body.country;
+    if (req.file.path === undefined){
+      const user = await User.findById(req.params.usersId);
+      user.login = req.body.login;
+      user.skype = req.body.skype;
+      user.github = req.body.github;
+      user.phoneNumber = req.body.phoneNumber;
+      user.currentProject = req.body.currentProject;
+      user.stack = req.body.stack;
+      user.status = req.body.status;
+      user.country = req.body.country;
 
-    const savedUser = await user.save()
-    res.json("Information updated!");
+      const savedUser = await user.save()
+      res.json("Information updated!");
+    }else{
+      const user = await User.findById(req.params.usersId);
+      user.login = req.body.login;
+      user.skype = req.body.skype;
+      user.github = req.body.github;
+      user.phoneNumber = req.body.phoneNumber;
+      user.currentProject = req.body.currentProject;
+      user.stack = req.body.stack;
+      user.status = req.body.status;
+      user.country = req.body.country;
+      user.userImage = req.file.path;
+  
+      const savedUser = await user.save()
+      res.json("Information updated!");
+    }
+
   }
   catch (err) {
     res.status(400).json("Error: " + err)

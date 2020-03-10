@@ -22,7 +22,8 @@ const userSchema = new Schema(
     stack:{ type: Array, required:false},
     status:{ type:String, required:false},
     country:{ type:String, required:false},
-    isAdmin:{type:Boolean, default:false}
+    isAdmin:{type:Boolean, default:false},
+    userImage: {type: String, required:false}
     //userImage: String
   }
 )

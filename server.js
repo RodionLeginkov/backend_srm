@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express')
 
+
 require("dotenv").config();
 
 const app = express();
@@ -18,19 +19,23 @@ const swaggerOptions = {
       description: "end point information",
       contact: {
         name: "Backend"
-      },
-      servers: ["http://localhost:5000"]
-    }
+      }
+    },
+    host: "localhost:5000",
+    basePath: "/",
+    schemes: 
+    -"http"
+    -"https"
   },
   // ['.routes/*.js']
-  apis: ["server.js",'./routes/*.js']
+  apis: ['./routes/project.js','./routes/users.js']
 };
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 const uri = process.env.ATLAS_URI;
 

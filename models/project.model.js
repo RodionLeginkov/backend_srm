@@ -10,8 +10,8 @@ const projectSchema = new Schema(
     stack: { type: Array, required: false },
     price: { type: Number, required: false },
     duration: { type: String, required: false},
-    description: { type: String, required: false }
-    //userImage: String
+    description: { type: String, required: false },
+    projectImage: {type: String, required:false}
   }
 )
 
