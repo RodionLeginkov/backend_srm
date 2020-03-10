@@ -243,7 +243,8 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
       user.country = req.body.country;
 
       const savedUser = await user.save()
-      res.json("Information updated!");
+      const newUser = await User.find({_id: req.params.usersId})
+      res.status(200).json(newUser);
     }else{
       const user = await User.findById(req.params.usersId);
       user.login = req.body.login;
@@ -257,9 +258,9 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
       user.userImage = req.file.path;
   
       const savedUser = await user.save()
-      res.json("Information updated!");
+      const newUser = await User.find({_id: req.params.usersId})
+      res.status(200).json(newUser);
     }
-
   }
   catch (err) {
     res.status(400).json("Error: " + err)
@@ -272,7 +273,8 @@ router.patch("/:usersId", async (req, res, next) => {
     const id = req.params.usersId;
 
     const result = await User.update({ _id: id }, { $set: req.body })
-    res.status(200).json(result)
+    const newUser = await User.find({_id: req.params.usersId})
+    res.status(200).json(newUser);
   } catch (err) {
     res.status(500).json("Error: " + err)
   };
