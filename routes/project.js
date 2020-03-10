@@ -36,6 +36,39 @@ const upload = multer({
 
 
 
+
+// Routes
+/**
+* @swagger
+* /projects:
+*  get:
+*    description: Use to request all projects
+*    parameters:
+*    - in: "body"
+*      name: "rojects"
+*      schema:
+*        type: object
+*        properties: 
+*          id:
+*           type: integer
+*          name:
+*           type:string
+*          status:
+*           type:string
+*          stack:
+*           type:array
+*          price:
+*           type:number
+*          duration:
+*           type:string
+*          projectImage:
+*           type:string          
+*    responses:
+*      '200':
+*        description: A successful response
+*/
+
+
 //router.post("/addproject", verify, async (req, res) => {
 router.route("/",verify).get(async (req, res) => {
 //router.get("/", verify,async(req, res) => {

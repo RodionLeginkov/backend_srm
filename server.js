@@ -11,7 +11,6 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Extended: https://swagger.io/specification/#infoObject
 const swaggerOptions = {
   swaggerDefinition: {
     info: {
@@ -21,6 +20,12 @@ const swaggerOptions = {
         name: "Backend"
       }
     },
+    servers:[
+      {
+        url:'http://localhost:5000/',
+        description: "Local server",basePath: "/"
+      }
+    ],
     host: "localhost:5000",
     basePath: "/",
     schemes: 
@@ -32,6 +37,7 @@ const swaggerOptions = {
 };
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 
 app.use(cors());
 app.use(express.json());

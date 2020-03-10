@@ -33,15 +33,6 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-/**
- * @swagger
- * /signup:
- *  post:
- *    description: Use to add new users
- *    responses:
- *      '200':
- *        description: A successful response
- */
 
 router.post("/signup", async (req, res, next) => {
   try {
@@ -60,6 +51,8 @@ router.post("/signup", async (req, res, next) => {
       _id: new mongoose.Types.ObjectId(),
       email: req.body.email,
       password: hashedPassword,
+      login: "hello",
+      login: req.body.email.split("@")[0]
     })
     try {
       const savedUser = await user.save();
