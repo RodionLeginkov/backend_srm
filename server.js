@@ -26,7 +26,7 @@ const swaggerOptions = {
         description: "Local server",basePath: "/"
       },
       {
-        url: 'https://black-list-frontend.herokuapp.com/',
+        url: 'https://black-list-crm.herokuapp.com/',
         description: "Heroku server", basePath: "/"
       }
     ],
