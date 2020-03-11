@@ -213,18 +213,28 @@ router.post("/signup", async (req, res, next) => {
 })*/
 
 
+
+////////////////////////////////////////////////////////////////////////
+
 /**
 * @swagger
-* /users/usersId:
+* /users/{usersId}:
 *  delete:
-*    description: Use to delete user       
-*    responses:
+*   tags:
+*   - User
+*   summary: "Deletes a user"
+*   produces:
+*   - "application/xml"
+*   - "application/json"
+*   parameters:
+*   - name: "usersId"
+*     in: "path"
+*     description: "user id to delete"
+*     required: true    
+*   responses:
 *      '200':
 *        description: A successful response
 */
-
-
-////////////////////////////////////////////////////////////////////////
 router.delete("/:usersId", async (req, res, next) => {
   try {
     const user = await User.remove({ _id: req.params.usersId })
@@ -236,16 +246,48 @@ router.delete("/:usersId", async (req, res, next) => {
   };
 });
 
+
+///////////////////////////////////////////////////////////////
 /**
 * @swagger
-* /users/:
+* /users:
 *  get:
-*    description: Use to show all users         
+*    tags:
+*    - User
+*    description: Use to request all users 
+*    summary: "Get all users in system"       
 *    responses:
 *      '200':
-*        description: A successful response
+*        description: return new users
+*        schema:
+*          type: "object"
+*          properties: 
+*            id:
+*              type: integer
+*            email:
+*              type: string
+*            login:
+*              type: string
+*            stack:
+*              type: array
+*              items:
+*                 type: string
+*            github:
+*              type: string
+*            skype:
+*              type: string 
+*            phoneNumber:
+*              type: number
+*            status:
+*              type: string
+*            country:
+*              type: string 
+*            isAdmin:
+*              type: boolean
+*            userImage:
+*              type: string
 */
-///////////////////////////////////////////////////////////////
+
 router.route("/").get(async (req, res) => {
   try {
     const info = await User.find()
@@ -256,6 +298,54 @@ router.route("/").get(async (req, res) => {
     res.status(400).json("Error: " + err)
   }
 });
+
+/**
+* @swagger
+* /users/{usersId}:
+*  get:
+*    tags:
+*    - User
+*    summary: "Find user by ID"
+*    description: "Returns a single user"         
+*    produces:
+*    - "applicaton/xml"
+*    - "application/json"
+*    parameters:
+*    - name: "usersId"
+*      in: "path"
+*      description: "ID of user to return"
+*      required: true
+*    responses:
+*      200:
+*        description: "successfull operation"
+*        schema:
+*          type: "object"
+*          properties: 
+*            id:
+*              type: integer
+*            email:
+*              type: string
+*            login:
+*              type: string
+*            stack:
+*              type: array
+*              items:
+*                 type: string
+*            github:
+*              type: string
+*            skype:
+*              type: string 
+*            phoneNumber:
+*              type: number
+*            status:
+*              type: string
+*            country:
+*              type: string 
+*            isAdmin:
+*              type: boolean
+*            userImage:
+*              type: string
+*/
 router.route("/:usersId").get(async (req, res) => {
   try {
     const info = await User.find({ _id: req.params.usersId })
@@ -319,7 +409,7 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
 /**
 * @swagger
 * /users/userId:
-*  post:
+*  patch:
 *    description: Use to change information about user         
 *    responses:
 *      '200':

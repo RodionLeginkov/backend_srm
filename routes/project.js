@@ -42,6 +42,8 @@ const upload = multer({
 * @swagger
 * /project:
 *  get:
+*    tags:
+*    - Project
 *    description: Use to request all projects 
 *    summary: "Get all project in system"       
 *    responses:
@@ -90,36 +92,44 @@ router.route("/",verify).get(async (req, res) => {
 
 /**
 * @swagger
-* /projects/projectId:
+* /project/{projectId}:
 *  get:
-*    description: Use to request a projects         
+*    tags:
+*    - Project
+*    summary: "Find project by ID"
+*    description: "Returns a single project"         
+*    produces:
+*    - "applicaton/xml"
+*    - "application/json"
 *    parameters:
-*    - in: "body"
-*      name: "Projects"
-*      schema:
-*        type: object
-*        properties: 
-*          id:
-*           type: integer
-*          name:
-*           type: string
-*          status:
-*           type: string
-*          stack:
-*           type: array
-*           items:
-*            type: string
-*          price:
-*           type: integer
-*          duration:
-*           type: string 
-*          description:
-*           type: string
-*          projectImage:
-*           type: string         
+*    - name: "projectId"
+*      in: "path"
+*      description: "ID of project to return"
+*      required: true
 *    responses:
-*      '200':
-*        description: return project by id
+*      200:
+*        description: "successfull operation"
+*        schema:
+*          type: "object"
+*          properties: 
+*            id:
+*              type: integer
+*            name:
+*              type: string
+*            status:
+*              type: string
+*            stack:
+*              type: array
+*              items:
+*                 type: string
+*            price:
+*              type: integer
+*            duration:
+*              type: string 
+*            description:
+*              type: string
+*            projectImage:
+*              type: string
 */
 
 router.route("/:projectId",verify).get(async (req, res) => {
@@ -145,6 +155,8 @@ router.route("/:projectId",verify).get(async (req, res) => {
 * @swagger
 * /projects/addproject:
 *  post:
+*    tags:
+*    - Project
 *    requestBody:
 *      description: Use to add new project     
 *      required: flase
@@ -244,10 +256,20 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
 
 /**
 * @swagger
-* /projects/projectId:
+* /project/{projectId}:
 *  delete:
-*    description: Use to delete project         
-*    responses:
+*   tags:
+*   - Project
+*   summary: "Deletes a project"
+*   produces:
+*   - "application/xml"
+*   - "application/json"
+*   parameters:
+*   - name: "projectId"
+*     in: "path"
+*     description: "Project id to delete"
+*     required: true    
+*   responses:
 *      '200':
 *        description: A successful response
 */
@@ -265,20 +287,72 @@ router.delete("/:projectId", async (req, res, next) => {
 
 /**
 * @swagger
-* /projectId:
+* /project/{projectId}:
 *  patch:
-*    description: Use to change a projects         
+*    tags:
+*    - Project
+*    summary: "Updates a project"
+*    description: "Returns a changed project"         
+*    produces:
+*    - "applicaton/xml"
+*    - "application/json"
+*    parameters:
+*    - name: "projectId"
+*      in: "path"
+*      description: "ID of project to return"
+*      required: true
+*    - name: "name"
+*      in: "fromData"
+*      description: "Updated name of the project"
+*      required: false
+*      type: "string"
+*    - name: "duration"
+*      in: "fromData"
+*      description: "Updated duration of the project"
+*      required: false
+*      type: "string"
+*    - name: "description"
+*      in: "fromData"
+*      description: "Updated description of the project"
+*      required: false
+*      type: "string"
+*    - name: "price"
+*      in: "fromData"
+*      description: "Updated price of the project"
+*      required: false
+*      type: "integer"
 *    responses:
-*      '200':
-*        description: A successful response
+*      200:
+*        description: "successfull operation"
+*        schema:
+*          type: "object"
+*          properties: 
+*            id:
+*              type: integer
+*            name:
+*              type: string
+*            status:
+*              type: string
+*            stack:
+*              type: array
+*              items:
+*                 type: string
+*            price:
+*              type: integer
+*            duration:
+*              type: string 
+*            description:
+*              type: string
+*            projectImage:
+*              type: string
 */
+
 
 //CHANGE PROJECT 
 
-router.patch("/:projectId",upload.single("projectImage"), async (req, res, next) => {
+router.patch("/:projectId", async (req, res, next) => {
   try {
     const id = req.params.projectId;
-
     const result = await Project.update({ _id: id }, { $set: req.body })
     const project = await Project.find({_id: req.params.projectId})
     res.status(200).json(project)
