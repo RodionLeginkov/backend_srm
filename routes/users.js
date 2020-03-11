@@ -44,6 +44,29 @@ const upload = multer({
 *        description: A successful response
 */
 
+/**
+* @swagger
+* /users/signup:
+*  post:
+*   tags:
+*   - User
+*   summary: "Signup user into the system"
+*   produces:
+*   - "application/xml"
+*   - "application/json"
+*   parameters:
+*   - name: "login"
+*     in: "fromData"
+*     description: "The user login"
+*     required: true 
+*   - name: "password"
+*     in: "fromData"
+*     description: "The password for login"
+*     required: true    
+*   responses:
+*      '200':
+*        description: A successful response
+*/
 router.post("/signup", async (req, res, next) => {
   try {
     const { error } = registerValidation(req.body)
@@ -81,12 +104,25 @@ router.post("/signup", async (req, res, next) => {
 * @swagger
 * /users/login:
 *  post:
-*    description: Use to login user         
-*    responses:
+*   tags:
+*   - User
+*   summary: "Logs user into the system"
+*   produces:
+*   - "application/xml"
+*   - "application/json"
+*   parameters:
+*   - name: "login"
+*     in: "fromData"
+*     description: "The user login"
+*     required: true 
+*   - name: "password"
+*     in: "fromData"
+*     description: "The password for login"
+*     required: true    
+*   responses:
 *      '200':
 *        description: A successful response
 */
-
 router.post("/login", async (req, res) => {
   const { error } = loginValidation(req.body)
   if (error) return res.status(400).send(error.details[0].message);
@@ -359,12 +395,70 @@ router.route("/:usersId").get(async (req, res) => {
 
 /**
 * @swagger
-* /users/update/userId:
+* /users/update/{usersId}:
 *  post:
-*    description: Use to add new information about user         
+*    tags:
+*    - User
+*    summary: "Updates a users"
+*    description: "Returns a changed users"         
+*    produces:
+*    - "applicaton/xml"
+*    - "application/json"
+*    parameters:
+*    - name: "usersId"
+*      in: "path"
+*      description: "ID of user to return"
+*      required: true
+*    - name: "login"
+*      in: "fromData"
+*      description: "Updated login of the project"
+*      required: false
+*      type: "string"
+*    - name: "skype"
+*      in: "fromData"
+*      description: "Updated skype of the project"
+*      required: false
+*      type: "string"
+*    - name: "currentProject"
+*      in: "fromData"
+*      description: "Updated currentProject of the project"
+*      required: false
+*      type: "string"
+*    - name: "phoneNumber"
+*      in: "fromData"
+*      description: "Updated phoneNumber of the project"
+*      required: false
+*      type: "integer"
 *    responses:
 *      '200':
-*        description: A successful response
+*        description: return new users
+*        schema:
+*          type: "object"
+*          properties: 
+*            id:
+*              type: integer
+*            email:
+*              type: string
+*            login:
+*              type: string
+*            stack:
+*              type: array
+*              items:
+*                 type: string
+*            github:
+*              type: string
+*            skype:
+*              type: string 
+*            phoneNumber:
+*              type: number
+*            status:
+*              type: string
+*            country:
+*              type: string 
+*            isAdmin:
+*              type: boolean
+*            userImage:
+*              type: string
 */
 /////////////////////////////////////////////////////////////////
 router.post("/update/:usersId", upload.single("userImage"), async (req, res, next) => {
@@ -406,14 +500,73 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
   }
 })
 
+
 /**
 * @swagger
-* /users/userId:
+* /users/{usersId}:
 *  patch:
-*    description: Use to change information about user         
+*    tags:
+*    - User
+*    summary: "Updates a users"
+*    description: "Returns a changed users"         
+*    produces:
+*    - "applicaton/xml"
+*    - "application/json"
+*    parameters:
+*    - name: "usersId"
+*      in: "path"
+*      description: "ID of user to return"
+*      required: true
+*    - name: "login"
+*      in: "fromData"
+*      description: "Updated login of the project"
+*      required: false
+*      type: "string"
+*    - name: "skype"
+*      in: "fromData"
+*      description: "Updated skype of the project"
+*      required: false
+*      type: "string"
+*    - name: "currentProject"
+*      in: "fromData"
+*      description: "Updated currentProject of the project"
+*      required: false
+*      type: "string"
+*    - name: "phoneNumber"
+*      in: "fromData"
+*      description: "Updated phoneNumber of the project"
+*      required: false
+*      type: "integer"
 *    responses:
 *      '200':
-*        description: A successful response
+*        description: return new users
+*        schema:
+*          type: "object"
+*          properties: 
+*            id:
+*              type: integer
+*            email:
+*              type: string
+*            login:
+*              type: string
+*            stack:
+*              type: array
+*              items:
+*                 type: string
+*            github:
+*              type: string
+*            skype:
+*              type: string 
+*            phoneNumber:
+*              type: number
+*            status:
+*              type: string
+*            country:
+*              type: string 
+*            isAdmin:
+*              type: boolean
+*            userImage:
+*              type: string
 */
 
 router.patch("/:usersId", async (req, res, next) => {

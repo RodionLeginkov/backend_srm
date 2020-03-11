@@ -153,39 +153,43 @@ router.route("/:projectId",verify).get(async (req, res) => {
 
 /**
 * @swagger
-* /projects/addproject:
+* /project/addproject:
 *  post:
 *    tags:
 *    - Project
-*    requestBody:
-*      description: Use to add new project     
-*      required: flase
-*      content: 
-*        application/json:     
-*         schema:
-*         type: object
-*         properties: 
-*          id:
-*           type: integer
-*          name:
-*           type: string
-*          status:
-*           type: string
-*          stack:
-*           type: array
-*           items:
-*            type: string
-*          price:
-*           type: integer
-*          duration:
-*           type: string 
-*          description:
-*           type: string
-*          projectImage:
-*           type: string  
+*    summary: "Updates a project"
+*    description: "Returns a changed project"         
+*    produces:
+*    - "applicaton/xml"
+*    - "application/json"
+*    parameters:
+*    - name: "projectId"
+*      in: "path"
+*      description: "ID of project to return"
+*      required: true
+*    - name: "name"
+*      in: "fromData"
+*      description: "Updated name of the project"
+*      required: false
+*      type: "string"
+*    - name: "duration"
+*      in: "fromData"
+*      description: "Updated duration of the project"
+*      required: false
+*      type: "string"
+*    - name: "description"
+*      in: "fromData"
+*      description: "Updated description of the project"
+*      required: false
+*      type: "string"
+*    - name: "price"
+*      in: "fromData"
+*      description: "Updated price of the project"
+*      required: false
+*      type: "integer"
 *    responses:
-*      '200':
-*        description: return new project
+*      200:
+*        description: "successfull operation"
 *        schema:
 *          type: "object"
 *          properties: 
@@ -208,6 +212,7 @@ router.route("/:projectId",verify).get(async (req, res) => {
 *            projectImage:
 *              type: string
 */
+
 router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
   try {
     console.log(req.file); 
