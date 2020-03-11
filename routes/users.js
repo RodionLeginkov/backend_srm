@@ -5,16 +5,15 @@ const jwt = require("jsonwebtoken")
 const { registerValidation, loginValidation } = require("./validation")
 const sgMail = require('@sendgrid/mail')
 const multer = require('multer')
+const aws = require("aws-sdk")
+
 let User = require("../models/users.model");
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, './uploads/');
-  },
-  filename: function(req, file, cb) {
-    cb(null, new Date().toISOString() + file.originalname);
-  }
-});
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage})
+
+
+/*
 
 const fileFilter = (req, file, cb) => {
   // reject a file
@@ -31,7 +30,7 @@ const upload = multer({
     fileSize: 1024 * 1024 * 5
   },
   fileFilter: fileFilter
-});
+});*/
 
 
 /**
@@ -463,7 +462,7 @@ router.route("/:usersId").get(async (req, res) => {
 /////////////////////////////////////////////////////////////////
 router.post("/update/:usersId", upload.single("userImage"), async (req, res, next) => {
   try {
-    if (req.file.path === undefined){
+    if (req.file === undefined){
       const user = await User.findById(req.params.usersId);
       user.login = req.body.login;
       user.skype = req.body.skype;
@@ -478,22 +477,41 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
       const newUser = await User.find({_id: req.params.usersId})
       res.status(200).json(newUser);
     }else{
-      const user = await User.findById(req.params.usersId);
-      user.login = req.body.login;
-      user.skype = req.body.skype;
-      user.github = req.body.github;
-      user.phoneNumber = req.body.phoneNumber;
-      user.currentProject = req.body.currentProject;
-      user.stack = req.body.stack;
-      user.status = req.body.status;
-      user.country = req.body.country;
-      user.userImage = req.file.path;
-  
-      const savedUser = await user.save()
-      const newUser = await User.find({_id: req.params.usersId})
-      res.status(200).json(newUser);
+      const file = req.file;
+      const s3FileURL = process.env.AWS_Uploaded_File_URL_LINK
+
+      let s3bucket = new aws.S3({
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        region: process.env.AWS_REGION
+      })
+
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: file.originalname,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: "public-read"
+      };
+      s3bucket.upload(params, async(err,data) =>{
+        if (err) res.status(500).json({ error: true, Message: err });
+        else{
+          console.log(data.Location)
+          const user = await User.findById(req.params.usersId);
+          user.login = req.body.login;
+          user.skype = req.body.skype;
+          user.github = req.body.github;
+          user.phoneNumber = req.body.phoneNumber;
+          user.currentProject = req.body.currentProject;
+          user.stack = req.body.stack;
+          user.status = req.body.status;
+          user.country = req.body.country;
+          user.userImage = data.Location;
+          const savedUser = await user.save()
+          const newUser = await User.find({_id: req.params.usersId})
+          res.status(200).json(newUser);
     }
-  }
+  })}}
   catch (err) {
     res.status(400).json("Error: " + err)
 

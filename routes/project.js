@@ -3,19 +3,17 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const verify = require("../middleware/check-auth")
 const multer = require('multer')
+const aws = require("aws-sdk")
 //const upload = multer({dest: '../uploads/'})
 
 let User = require("../models/users.model");
 let Project = require("../models/project.model")
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, './uploads/');
-  },
-  filename: function(req, file, cb) {
-    cb(null, new Date().toISOString() + file.originalname);
-  }
-});
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage})
+
+/*
 
 const fileFilter = (req, file, cb) => {
   // reject a file
@@ -32,7 +30,7 @@ const upload = multer({
     fileSize: 1024 * 1024 * 5
   },
   fileFilter: fileFilter
-});
+});*/
 
 
 
@@ -215,7 +213,6 @@ router.route("/:projectId",verify).get(async (req, res) => {
 
 router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
   try {
-    console.log(req.file); 
     if( req.file === undefined){
       console.log(req.body)
       const newproject = new Project({
@@ -234,7 +231,27 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
       const savedProject = await newproject.save()
       res.json(newproject)
     }else{
-      const newproject = new Project({
+      const file = req.file;
+      const s3FileURL = process.env.AWS_Uploaded_File_URL_LINK
+
+      let s3bucket = new aws.S3({
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        region: process.env.AWS_REGION
+      })
+
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: file.originalname,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: "public-read"
+      };
+
+      s3bucket.upload(params, async(err,data) =>{
+        if (err) res.status(500).json({ error: true, Message: err });
+        else{
+        const newproject = new Project({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         status: req.body.status,
@@ -242,7 +259,7 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
         price: req.body.price,
         duration: req.body.duration,
         description: req.body.description,
-        projectImage: req.file.path,
+        projectImage: data.Location,
         developers: req.body.developers
       })
       const { userId } = res.locals;
@@ -250,7 +267,8 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
       //if (!user.isAdmin) throw 'not admin'
       const savedProject = await newproject.save()
       res.json(newproject)
-    }
+    };
+    })}
 
 
     
