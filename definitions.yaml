@@ -1,0 +1,22 @@
+definitions:
+  Project:
+    type: "object"
+    properties: 
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: string
+      stack:
+        type: array
+      items:
+        type: string
+      price:
+        type: integer
+      duration:
+        type: string 
+      description:
+        type: string
+      projectImage:
+        type: string  

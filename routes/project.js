@@ -40,32 +40,34 @@ const upload = multer({
 // Routes
 /**
 * @swagger
-* /projects:
+* /project:
 *  get:
-*    description: Use to request all projects
-*    parameters:
-*    - in: "body"
-*      name: "rojects"
-*      schema:
-*        type: object
-*        properties: 
-*          id:
-*           type: integer
-*          name:
-*           type:string
-*          status:
-*           type:string
-*          stack:
-*           type:array
-*          price:
-*           type:number
-*          duration:
-*           type:string
-*          projectImage:
-*           type:string          
+*    description: Use to request all projects 
+*    summary: "Get all project in system"       
 *    responses:
 *      '200':
-*        description: A successful response
+*        description: return new project
+*        schema:
+*          type: "object"
+*          properties: 
+*            id:
+*              type: integer
+*            name:
+*              type: string
+*            status:
+*              type: string
+*            stack:
+*              type: array
+*              items:
+*                 type: string
+*            price:
+*              type: integer
+*            duration:
+*              type: string 
+*            description:
+*              type: string
+*            projectImage:
+*              type: string
 */
 
 
@@ -84,6 +86,41 @@ router.route("/",verify).get(async (req, res) => {
   }
 })
 
+
+
+/**
+* @swagger
+* /projects/projectId:
+*  get:
+*    description: Use to request a projects         
+*    parameters:
+*    - in: "body"
+*      name: "Projects"
+*      schema:
+*        type: object
+*        properties: 
+*          id:
+*           type: integer
+*          name:
+*           type: string
+*          status:
+*           type: string
+*          stack:
+*           type: array
+*           items:
+*            type: string
+*          price:
+*           type: integer
+*          duration:
+*           type: string 
+*          description:
+*           type: string
+*          projectImage:
+*           type: string         
+*    responses:
+*      '200':
+*        description: return project by id
+*/
 
 router.route("/:projectId",verify).get(async (req, res) => {
   try {
@@ -104,7 +141,61 @@ router.route("/:projectId",verify).get(async (req, res) => {
 //ADD NEW PROJECT
 
 
-
+/**
+* @swagger
+* /projects/addproject:
+*  post:
+*    requestBody:
+*      description: Use to add new project     
+*      required: flase
+*      content: 
+*        application/json:     
+*         schema:
+*         type: object
+*         properties: 
+*          id:
+*           type: integer
+*          name:
+*           type: string
+*          status:
+*           type: string
+*          stack:
+*           type: array
+*           items:
+*            type: string
+*          price:
+*           type: integer
+*          duration:
+*           type: string 
+*          description:
+*           type: string
+*          projectImage:
+*           type: string  
+*    responses:
+*      '200':
+*        description: return new project
+*        schema:
+*          type: "object"
+*          properties: 
+*            id:
+*              type: integer
+*            name:
+*              type: string
+*            status:
+*              type: string
+*            stack:
+*              type: array
+*              items:
+*                 type: string
+*            price:
+*              type: integer
+*            duration:
+*              type: string 
+*            description:
+*              type: string
+*            projectImage:
+*              type: string
+*/
 router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
   try {
     console.log(req.file); 
@@ -117,7 +208,8 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
         stack: req.body.stack,
         price: req.body.price,
         duration: req.body.duration,
-        description: req.body.description
+        description: req.body.description,
+        developers: req.body.developers
       })
       const { userId } = res.locals;
       const user = await User.findById(userId);
@@ -133,7 +225,8 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
         price: req.body.price,
         duration: req.body.duration,
         description: req.body.description,
-        projectImage: req.file.path
+        projectImage: req.file.path,
+        developers: req.body.developers
       })
       const { userId } = res.locals;
       const user = await User.findById(userId);
@@ -149,6 +242,15 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
 });
 
 
+/**
+* @swagger
+* /projects/projectId:
+*  delete:
+*    description: Use to delete project         
+*    responses:
+*      '200':
+*        description: A successful response
+*/
 //DELETE PROJECT
 router.delete("/:projectId", async (req, res, next) => {
   try {
@@ -161,6 +263,15 @@ router.delete("/:projectId", async (req, res, next) => {
   };
 });
 
+/**
+* @swagger
+* /projectId:
+*  patch:
+*    description: Use to change a projects         
+*    responses:
+*      '200':
+*        description: A successful response
+*/
 
 //CHANGE PROJECT 
 

@@ -34,6 +34,16 @@ const upload = multer({
 });
 
 
+/**
+* @swagger
+* /users/signup:
+*  post:
+*    description: Use to create new user         
+*    responses:
+*      '200':
+*        description: A successful response
+*/
+
 router.post("/signup", async (req, res, next) => {
   try {
     const { error } = registerValidation(req.body)
@@ -66,6 +76,16 @@ router.post("/signup", async (req, res, next) => {
     res.status(400).send(error)
   }
 })
+
+/**
+* @swagger
+* /users/login:
+*  post:
+*    description: Use to login user         
+*    responses:
+*      '200':
+*        description: A successful response
+*/
 
 router.post("/login", async (req, res) => {
   const { error } = loginValidation(req.body)
@@ -192,6 +212,18 @@ router.post("/signup", async (req, res, next) => {
   };
 })*/
 
+
+/**
+* @swagger
+* /users/usersId:
+*  delete:
+*    description: Use to delete user       
+*    responses:
+*      '200':
+*        description: A successful response
+*/
+
+
 ////////////////////////////////////////////////////////////////////////
 router.delete("/:usersId", async (req, res, next) => {
   try {
@@ -204,7 +236,15 @@ router.delete("/:usersId", async (req, res, next) => {
   };
 });
 
-
+/**
+* @swagger
+* /users/:
+*  get:
+*    description: Use to show all users         
+*    responses:
+*      '200':
+*        description: A successful response
+*/
 ///////////////////////////////////////////////////////////////
 router.route("/").get(async (req, res) => {
   try {
@@ -227,7 +267,15 @@ router.route("/:usersId").get(async (req, res) => {
   };
 })
 
-
+/**
+* @swagger
+* /users/update/userId:
+*  post:
+*    description: Use to add new information about user         
+*    responses:
+*      '200':
+*        description: A successful response
+*/
 /////////////////////////////////////////////////////////////////
 router.post("/update/:usersId", upload.single("userImage"), async (req, res, next) => {
   try {
@@ -267,6 +315,16 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
 
   }
 })
+
+/**
+* @swagger
+* /users/userId:
+*  post:
+*    description: Use to change information about user         
+*    responses:
+*      '200':
+*        description: A successful response
+*/
 
 router.patch("/:usersId", async (req, res, next) => {
   try {

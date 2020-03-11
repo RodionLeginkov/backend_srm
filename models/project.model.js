@@ -11,7 +11,8 @@ const projectSchema = new Schema(
     price: { type: Number, required: false },
     duration: { type: String, required: false},
     description: { type: String, required: false },
-    projectImage: {type: String, required:false}
+    projectImage: {type: String, required:false},
+    developers: {type: Array, required:false}
   }
 )
 
