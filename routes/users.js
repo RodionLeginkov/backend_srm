@@ -6,8 +6,11 @@ const { registerValidation, loginValidation } = require("./validation")
 const sgMail = require('@sendgrid/mail')
 const multer = require('multer')
 const aws = require("aws-sdk")
-
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+//import crypto from 'crypto';
 let User = require("../models/users.model");
+
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage})
@@ -499,6 +502,10 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
           console.log(data.Location)
           const user = await User.findById(req.params.usersId);
           user.login = req.body.login;
+          user.name = req.body.name;
+          user.surname = req.body.surname;
+          user.skills = req.body.skills;
+          user.englishLevel = req.body.englishLevel;
           user.skype = req.body.skype;
           user.github = req.body.github;
           user.phoneNumber = req.body.phoneNumber;
@@ -601,3 +608,104 @@ router.patch("/:usersId", async (req, res, next) => {
 
 
 module.exports = router;
+
+
+router.post("/forgotPassword", async (req,res) =>{
+  //console.log(req.body)
+  if (req.body.email === "") res.status(400).send('email required');
+  //console.error(req.body.email);
+  const user = await User.findOne({
+    email:req.body.email
+  });
+  
+  if (user === null ){
+    console.error('email not in database');
+    res.status(403).send('email not in db')
+  }else {
+    const token = crypto.randomBytes(20).toString('hex');
+    await user.update({
+      login: "test forget",
+      resetPasswordToken: token,
+      resetPasswordExpires: Date.now() + 3600000,
+      
+    });
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth:{
+        user: `${process.env.EMAIL_ADDRESS}`,
+        pass: `${process.env.EMAIL_PASSWORD}`,
+      }
+    })
+    console.log(user)
+    const mailOptions = {
+      from: 'rodion.leginkov@gmail.com',
+      to: `${user.email}`,
+      subject: 'Link to Reset Password',
+      text:
+      'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
+      + 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
+      + `https://black-list-frontend.herokuapp.com//reset/${token}\n\n`
+      + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
+    }
+
+    //console.log('sending mail');
+
+    transporter.sendMail(mailOptions, (err, response) =>{
+      if (err) console.error('there was an error: ', err);
+      else{
+        console.log('here is the res: ', response);
+        res.status(200).json('recovery email sent')
+      }
+    })
+  }
+
+})
+
+router.get('/reset', async(req,res,next) =>{
+
+      console.log(req)
+      console.log("heeeeeeeelllllllllllooooooooooooo")
+    const user = await User.findOne({resetPasswordToken:req.query.resetPasswordToken})
+    try{
+    if (user === null){
+      console.log('password reset link is invalid or nas expired')
+      res.json('password reset link is invalid or nas expired ')
+    }else{
+      res.status(200).send({
+        login: user.login,
+        message: 'password reset link a-ok'
+      })
+    }
+  }
+  catch (err) {
+    res.status(500).json("Error: " + err)
+  };
+})
+
+
+router.put('/updatePasswordViaEmail', async(req,res,next) =>{
+  try{
+    //console.log(req.body.resetPasswordToken)
+  const user = await User.findOne({resetPasswordToken:req.body.resetPasswordToken})
+  console.log(user)
+  if (user != null){
+    console.log("user exists in db");
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    await user.update({
+      login: "brood",
+      password: hashedPassword,
+      resetPasswordToken: null,
+      resetPasswordExpires: null
+    })
+    
+    // console.log(user.login)
+    // console.log('password updated')
+    res.status(200).send({message: 'password updated'})
+  }
+  else{
+    console.log('no user exists in db to update');
+    res.status(404).json('no user exists in db to update')
+  }}catch (err) {
+  res.status(500).json("Error: " + err)
+};
+})
