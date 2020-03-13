@@ -44,7 +44,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
-app.use(cors());
+app.use(cors({ origin : '*'}));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
