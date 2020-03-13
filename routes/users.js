@@ -480,6 +480,7 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
       user.stack = req.body.stack;
       user.skillset= req.body.skillset;
       user.comment = req.body.comment;
+      user.status = req.body.status;
 
       const savedUser = await user.save()
       const newUser = await User.find({_id: req.params.usersId})
@@ -619,6 +620,7 @@ module.exports = router;
 
 router.post("/forgotPassword", async (req,res) =>{
   //console.log(req.body)
+  try{
   if (req.body.email === "") res.status(400).send('email required');
   //console.error(req.body.email);
   const user = await User.findOne({
@@ -664,7 +666,9 @@ router.post("/forgotPassword", async (req,res) =>{
       }
     })
   }
-
+  }   catch (err) {
+    res.status(400).send(err);
+  }
 })
 
 router.get('/reset', async(req,res,next) =>{

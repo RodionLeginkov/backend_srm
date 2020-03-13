@@ -17,6 +17,7 @@ const userSchema = new Schema(
     login: { type: String, required: false, max: 255 },
     fullName:{ type: String, required: false },
     role:{ type: String, required: false },
+    status:{ type: String, required: false },
     englishLevel:{ type: String, required: false },
     dataofJoining:{ type: String, required: false },
     dataofLeave:{ type: String, required: false },
