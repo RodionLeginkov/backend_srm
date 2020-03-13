@@ -624,7 +624,6 @@ router.post("/forgotPassword", async (req,res) =>{
   }else {
     const token = crypto.randomBytes(20).toString('hex');
     await user.update({
-      login: "test forget",
       resetPasswordToken: token,
       resetPasswordExpires: Date.now() + 3600000,
       
