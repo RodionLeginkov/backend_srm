@@ -217,13 +217,27 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
       console.log(req.body)
       const newproject = new Project({
         _id: new mongoose.Types.ObjectId(),
-        name: req.body.name,
         status: req.body.status,
         stack: req.body.stack,
         price: req.body.price,
         duration: req.body.duration,
+        group: req.body.group,
+        name: req.body.name,
+        formatOfCommunication: req.body.formatOfCommunication,
+        messager: req.body.messager,
+        startData: req.body.startData,
+        endData: req.body.endData,
+        type: req.body.type,
+        source: req.body.source,
+        withdrawalOfFunds: req.body.withdrawalOfFunds,
+        owner: req.body.owner,
+        paymentType: req.body.paymentType,
+        paymentAmount: req.body.paymentAmount,
+        load: req.body.load,
         description: req.body.description,
-        developers: req.body.developers
+        resources: req.body.resources,
+        history: req.body.history,
+        developers: req.body.developers,
       })
       const { userId } = res.locals;
       const user = await User.findById(userId);
@@ -252,15 +266,29 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
         if (err) res.status(500).json({ error: true, Message: err });
         else{
         const newproject = new Project({
-        _id: new mongoose.Types.ObjectId(),
-        name: req.body.name,
-        status: req.body.status,
-        stack: req.body.stack,
-        price: req.body.price,
-        duration: req.body.duration,
-        description: req.body.description,
-        projectImage: data.Location,
-        developers: req.body.developers
+          _id: new mongoose.Types.ObjectId(),
+          status: req.body.status,
+          stack: req.body.stack,
+          price: req.body.price,
+          duration: req.body.duration,
+          group: req.body.group,
+          name: req.body.name,
+          formatOfCommunication: req.body.formatOfCommunication,
+          messager: req.body.messager,
+          startData: req.body.startData,
+          endData: req.body.endData,
+          type: req.body.type,
+          source: req.body.source,
+          withdrawalOfFunds: req.body.withdrawalOfFunds,
+          owner: req.body.owner,
+          paymentType: req.body.paymentType,
+          paymentAmount: req.body.paymentAmount,
+          load: req.body.load,
+          description: req.body.description,
+          resources: req.body.resources,
+          history: req.body.history,
+          developers: req.body.developers,
+          projectImage: data.Location,
       })
       const { userId } = res.locals;
       const user = await User.findById(userId);

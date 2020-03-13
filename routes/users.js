@@ -467,18 +467,18 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
     if (req.file === undefined){
       const user = await User.findById(req.params.usersId);
       user.login = req.body.login;
-      user.FullName = req.body.FullName;
-      user.Role = req.body.Role;
+      user.fullName = req.body.fullName;
+      user.role = req.body.role;
       user.englishLevel = req.body.englishLevel;
-      user.DataofJoining = req.body.DataofJoining;
-      user.DataofLeave = req.body.DataofLeave;
+      user.dataofJoining = req.body.dataofJoining;
+      user.dataofLeave = req.body.dataofLeave;
       user.skype = req.body.skype;
       user.github = req.body.github;
       user.phoneNumber = req.body.phoneNumber;
-      user.MainTask = req.body.MainTask
+      user.mainTask = req.body.mainTask
       user.currentProject = req.body.currentProject;
       user.stack = req.body.stack;
-      user.Skillset= req.body.Skillset;
+      user.skillset= req.body.skillset;
       user.comment = req.body.comment;
 
       const savedUser = await user.save()
@@ -507,18 +507,18 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
           console.log(data.Location)
           const user = await User.findById(req.params.usersId);
           user.login = req.body.login;
-          user.FullName = req.body.FullName;
-          user.Role = req.body.Role;
+          user.fullName = req.body.fullName;
+          user.role = req.body.role;
           user.englishLevel = req.body.englishLevel;
-          user.DataofJoining = req.body.DataofJoining;
-          user.DataofLeave = req.body.DataofLeave;
+          user.dataofJoining = req.body.dataofJoining;
+          user.dataofLeave = req.body.dataofLeave;
           user.skype = req.body.skype;
           user.github = req.body.github;
           user.phoneNumber = req.body.phoneNumber;
-          user.MainTask = req.body.MainTask
+          user.mainTask = req.body.mainTask
           user.currentProject = req.body.currentProject;
           user.stack = req.body.stack;
-          user.Skillset= req.body.Skillset;
+          user.skillset= req.body.skillset;
           user.comment = req.body.comment;
           user.userImage = data.Location;
           const savedUser = await user.save()

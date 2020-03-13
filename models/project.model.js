@@ -9,7 +9,6 @@ const projectSchema = new Schema(
     stack: { type: Array, required: false },
     price: { type: Number, required: false },
     duration: { type: String, required: false},
-    description: { type: String, required: false },
     /////////
     group:{ type: Array, required: false },
     name: { type: String, required: true },
@@ -21,8 +20,12 @@ const projectSchema = new Schema(
     source:{ type: String, required: false},
     withdrawalOfFunds:{ type: String, required: false},
     owner:{ type: String, required: false},
-
-
+    paymentType:{ type: String, required: false },
+    paymentAmount:{ type: Number, required: false },
+    load:{ type: String, required: false},
+    description: { type: String, required: false },
+    resources: { type: Array, required: false },
+    history:{ type: String, required: false },
     projectImage: {type: String, required:false},
     developers: {type: Array, required:false}
   }
