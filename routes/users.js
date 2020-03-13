@@ -652,7 +652,7 @@ router.post("/forgotPassword", async (req,res) =>{
       text:
       'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
       + 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
-      + `https://black-list-frontend.herokuapp.com/reset/${token}\n\n`
+      + `https://black-list-frontend.herokuapp.com//reset/${token}\n\n`
       + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
     }
 
@@ -697,7 +697,9 @@ router.put('/updatePasswordViaEmail', async(req,res,next) =>{
   try{
     //console.log(req.body.resetPasswordToken)
   const user = await User.findOne({resetPasswordToken:req.body.resetPasswordToken})
-  console.log(user)
+  //console.log(user)
+  console.log(req.body.password.length)
+  if (req.body.password.length < 6) return res.status(400).send('password is wrong');
   if (user != null){
     console.log("user exists in db");
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
