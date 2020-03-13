@@ -86,7 +86,6 @@ router.post("/signup", async (req, res, next) => {
       _id: new mongoose.Types.ObjectId(),
       email: req.body.email,
       password: hashedPassword,
-      login: "hello",
       login: req.body.email.split("@")[0]
     })
     try {
@@ -468,13 +467,19 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
     if (req.file === undefined){
       const user = await User.findById(req.params.usersId);
       user.login = req.body.login;
+      user.FullName = req.body.FullName;
+      user.Role = req.body.Role;
+      user.englishLevel = req.body.englishLevel;
+      user.DataofJoining = req.body.DataofJoining;
+      user.DataofLeave = req.body.DataofLeave;
       user.skype = req.body.skype;
       user.github = req.body.github;
       user.phoneNumber = req.body.phoneNumber;
+      user.MainTask = req.body.MainTask
       user.currentProject = req.body.currentProject;
       user.stack = req.body.stack;
-      user.status = req.body.status;
-      user.country = req.body.country;
+      user.Skillset= req.body.Skillset;
+      user.comment = req.body.comment;
 
       const savedUser = await user.save()
       const newUser = await User.find({_id: req.params.usersId})
@@ -502,17 +507,19 @@ router.post("/update/:usersId", upload.single("userImage"), async (req, res, nex
           console.log(data.Location)
           const user = await User.findById(req.params.usersId);
           user.login = req.body.login;
-          user.name = req.body.name;
-          user.surname = req.body.surname;
-          user.skills = req.body.skills;
+          user.FullName = req.body.FullName;
+          user.Role = req.body.Role;
           user.englishLevel = req.body.englishLevel;
+          user.DataofJoining = req.body.DataofJoining;
+          user.DataofLeave = req.body.DataofLeave;
           user.skype = req.body.skype;
           user.github = req.body.github;
           user.phoneNumber = req.body.phoneNumber;
+          user.MainTask = req.body.MainTask
           user.currentProject = req.body.currentProject;
           user.stack = req.body.stack;
-          user.status = req.body.status;
-          user.country = req.body.country;
+          user.Skillset= req.body.Skillset;
+          user.comment = req.body.comment;
           user.userImage = data.Location;
           const savedUser = await user.save()
           const newUser = await User.find({_id: req.params.usersId})
@@ -691,7 +698,6 @@ router.put('/updatePasswordViaEmail', async(req,res,next) =>{
     console.log("user exists in db");
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     await user.update({
-      login: "brood",
       password: hashedPassword,
       resetPasswordToken: null,
       resetPasswordExpires: null
