@@ -90,7 +90,7 @@ router.post("/signup", async (req, res, next) => {
     })
     try {
       const savedUser = await user.save();
-      res.send({ user: user._id });
+      res.send({ user: user});
     }
     catch (err) {
       res.status(400).send(err);
@@ -125,6 +125,7 @@ router.post("/signup", async (req, res, next) => {
 *        description: A successful response
 */
 router.post("/login", async (req, res) => {
+  console.log(req.body.email);
   const { error } = loginValidation(req.body)
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -136,10 +137,13 @@ router.post("/login", async (req, res) => {
   const validPass = await bcrypt.compare(req.body.password, user.password);
   if (!validPass) return res.status(400).send("Password is wrong");
 
-
   //Create and assign a token
   const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
-  res.send(token)
+  
+  await user.update({token: token});
+  //console.log(token)
+  console.log(user)
+  res.send(user)
 })
 
 ///////////////////////////////////////////////////////
@@ -652,7 +656,7 @@ router.post("/forgotPassword", async (req,res) =>{
       text:
       'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n'
       + 'Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n'
-      + `https://black-list-frontend.herokuapp.com/reset/${token}\n\n`
+      + `http://localhost:3000/reset/${token}\n\n`
       + 'If you did not request this, please ignore this email and your password will remain unchanged.\n',
     }
 

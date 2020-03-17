@@ -15,6 +15,7 @@ const userSchema = new Schema(
     },
     password: { type: String, required: true, min: 6 },
     login: { type: String, required: false, max: 255 },
+    token: { type: String, required: false},
     fullName:{ type: String, required: false },
     role:{ type: String, required: false },
     status:{ type: String, required: false },
