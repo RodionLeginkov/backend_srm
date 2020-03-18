@@ -214,7 +214,7 @@ router.route("/:projectId",verify).get(async (req, res) => {
 router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
   try {
     if( req.file === undefined){
-      console.log(req.body)
+      //console.log(req.body)
       const newproject = new Project({
         _id: new mongoose.Types.ObjectId(),
         status: req.body.status,

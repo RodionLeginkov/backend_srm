@@ -71,9 +71,8 @@ const upload = multer({
 */
 router.post("/signup", async (req, res, next) => {
   try {
-    const { error } = registerValidation(req.body)
-    if (error) return res.status(400).send(error.details[0].message)
-
+    //const { error } = registerValidation(req.body)
+    //if (error) return res.status(400).send(error.details[0].message)
     //cheking if the user is already in the database
     const emailExist = await User.findOne({ email: req.body.email })
     if (emailExist) return res.status(400).send("Email already exists");
@@ -86,6 +85,7 @@ router.post("/signup", async (req, res, next) => {
       _id: new mongoose.Types.ObjectId(),
       email: req.body.email,
       password: hashedPassword,
+      fullName: req.body.fullName,
       login: req.body.email.split("@")[0]
     })
     try {
@@ -125,7 +125,7 @@ router.post("/signup", async (req, res, next) => {
 *        description: A successful response
 */
 router.post("/login", async (req, res) => {
-  console.log(req.body.email);
+  //console.log(req.body.email);
   const { error } = loginValidation(req.body)
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -138,11 +138,12 @@ router.post("/login", async (req, res) => {
   if (!validPass) return res.status(400).send("Password is wrong");
 
   //Create and assign a token
+  //console.log(user.id)
   const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
-  
+  //console.log("Token", token)
   await user.update({token: token});
-  //console.log(token)
-  console.log(user)
+  //console.log("USER", user)
+  //console.log(user)
   res.send(user)
 })
 
@@ -677,8 +678,8 @@ router.post("/forgotPassword", async (req,res) =>{
 
 router.get('/reset', async(req,res,next) =>{
 
-      console.log(req)
-      console.log("heeeeeeeelllllllllllooooooooooooo")
+      //console.log(req)
+     // console.log("heeeeeeeelllllllllllooooooooooooo")
     const user = await User.findOne({resetPasswordToken:req.query.resetPasswordToken})
     try{
     if (user === null){
