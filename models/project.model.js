@@ -14,7 +14,7 @@ const projectSchema = new Schema(
     //NEW
     group:{ type: Array, required: false },
     name: { type: String, required: true },
-    comunication:{ type: Array, required: true },
+    comunication:{ type: String, required: true },
     messager:{ type: Array, required: false },
     startDate:{ type: String, required: true },
     endDate:{ type: String, required: false },
