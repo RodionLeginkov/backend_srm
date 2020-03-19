@@ -72,9 +72,10 @@ const upload = multer({
 
 
 //router.post("/addproject", verify, async (req, res) => {
-router.route("/",verify).get(async (req, res) => {
-//router.get("/", verify,async(req, res) => {
+//router.route("/").get( async (req, res) => {
+router.get("/",verify, async(req, res) => {
   try {
+    //console.log( req.headers.token)
     //const { userId } = res.locals;
     // const user = await User.findById(userId);
     //if (!user.isAdmin) throw 'not admin'
@@ -130,7 +131,7 @@ router.route("/",verify).get(async (req, res) => {
 *              type: string
 */
 
-router.route("/:projectId",verify).get(async (req, res) => {
+router.route("/:projectId").get(async (req, res) => {
   try {
     const project = await Project.find({ _id: req.params.projectId })
     res.status(200).json({ project })
@@ -214,7 +215,6 @@ router.route("/:projectId",verify).get(async (req, res) => {
 router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
   try {
     if( req.file === undefined){
-      //console.log(req.body)
       const newproject = new Project({
         _id: new mongoose.Types.ObjectId(),
         status: req.body.status,
@@ -240,6 +240,7 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
         developers: req.body.developers,
       })
       const { userId } = res.locals;
+      console.log(newproject)
       const user = await User.findById(userId);
       //if (!user.isAdmin) throw 'not admin'
       const savedProject = await newproject.save()
@@ -327,6 +328,7 @@ router.post("/addproject", upload.single("projectImage") ,async (req, res) => {
 //DELETE PROJECT
 router.delete("/:projectId", async (req, res, next) => {
   try {
+    //console.log(verify)
     const project = await Project.remove({ _id: req.params.projectId })
     res.status(200).json({ message: "User deleted" })
 

@@ -141,10 +141,10 @@ router.post("/login", async (req, res) => {
   //console.log(user.id)
   const token = jwt.sign({ _id: user.id }, process.env.TOKEN_SECRET);
   //console.log("Token", token)
-  await user.update({token: token});
+  //await user.update({token: token});
   //console.log("USER", user)
   //console.log(user)
-  res.send(user)
+  res.send({user,token})
 })
 
 ///////////////////////////////////////////////////////

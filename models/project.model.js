@@ -23,7 +23,7 @@ const projectSchema = new Schema(
     withdrawalOfFunds:{ type: String, required: true},
     owner:{ type: String, required: false},
     paymentType:{ type: String, required: true },
-    paymentAmount:{ type: Number, required: true },
+    paymentAmount:{ type: String, required: true },
     load:{ type: String, required: true},
     description: { type: String, required: false },
     resources: { type: Array, required: true },
