@@ -131,8 +131,9 @@ router.get("/",verify, async(req, res) => {
 *              type: string
 */
 
-router.route("/:projectId").get(async (req, res) => {
-  try {
+//router.route("/:projectId",verify).get(async (req, res) => {
+router.get("/:projectId",verify, async(req,res) => { 
+try {
     const project = await Project.find({ _id: req.params.projectId })
     res.status(200).json({ project })
 
@@ -215,7 +216,7 @@ router.route("/:projectId").get(async (req, res) => {
 router.post("/addproject",verify, upload.single("projectImage") ,async (req, res) => {
   try {
     if( req.file === undefined){
-      console.log("REQ>BODY",req.body)
+      //console.log("REQ>BODY",req.body)
       const newproject = new Project({
         _id: new mongoose.Types.ObjectId(),
         status: req.body.status,
@@ -241,7 +242,7 @@ router.post("/addproject",verify, upload.single("projectImage") ,async (req, res
         developers: req.body.developers,
       })
       const { userId } = res.locals;
-      console.log("NEWPROJECT",newproject)
+      //console.log("NEWPROJECT",newproject)
       const user = await User.findById(userId);
       //if (!user.isAdmin) throw 'not admin'
       const savedProject = await newproject.save()
@@ -327,12 +328,12 @@ router.post("/addproject",verify, upload.single("projectImage") ,async (req, res
 *        description: A successful response
 */
 //DELETE PROJECT
-router.delete("/:projectId", async (req, res, next) => {
+router.delete("/:projectId",verify, async (req, res, next) => {
   try {
-    //console.log(verify)
+    //(verify)
     const project = await Project.remove({ _id: req.params.projectId })
     res.status(200).json({ message: "User deleted" })
-
+    
   }
   catch (err) {
     res.status(500).json("Error: " + err)
@@ -340,8 +341,8 @@ router.delete("/:projectId", async (req, res, next) => {
 });
 
 /**
-* @swagger
-* /project/{projectId}:
+ * @swagger
+ * /project/{projectId}:
 *  patch:
 *    tags:
 *    - Project
@@ -405,6 +406,7 @@ router.delete("/:projectId", async (req, res, next) => {
 //CHANGE PROJECT 
 
 router.patch("/:projectId", async (req, res, next) => {
+  //console.log(req.headers)
   try {
     const id = req.params.projectId;
     const result = await Project.update({ _id: id }, { $set: req.body })

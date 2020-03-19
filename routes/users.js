@@ -2,6 +2,7 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt")
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken")
+const verify = require("../middleware/check-auth")
 const { registerValidation, loginValidation } = require("./validation")
 const sgMail = require('@sendgrid/mail')
 const multer = require('multer')
@@ -330,7 +331,8 @@ router.delete("/:usersId", async (req, res, next) => {
 *              type: string
 */
 
-router.route("/").get(async (req, res) => {
+//router.route("/",verify).get(async (req, res) => {
+router.get("/",verify, async(req,res) =>{
   try {
     const info = await User.find()
     res.json(info)
@@ -388,8 +390,9 @@ router.route("/").get(async (req, res) => {
 *            userImage:
 *              type: string
 */
-router.route("/:usersId").get(async (req, res) => {
-  try {
+//router.route("/:usersId").get(async (req, res) => {
+router.get('/:usersId', async (req,res) => {  
+try {
     const info = await User.find({ _id: req.params.usersId })
     res.status(200).json({ info })
 

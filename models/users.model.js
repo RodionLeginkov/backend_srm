@@ -24,7 +24,7 @@ const userSchema = new Schema(
     dataofLeave:{ type: String, required: false },
     skype: { type: String, required: false },
     github: { type: String, required: false },
-    phoneNumber: { type: Number, required: false },
+    phoneNumber: { type: String, required: false },
     mainTask: { type: String, required: false },
     currentProject: { type: Array, required: false },
     stack:{ type: Array, required:false},
