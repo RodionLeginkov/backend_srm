@@ -128,15 +128,15 @@ router.post("/signup", async (req, res, next) => {
 router.post("/login", async (req, res) => {
   //console.log(req.body.email);
   const { error } = loginValidation(req.body)
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return res.status(400).send({message:"Something is wrong"});
 
   //cheking if the email exists
   const user = await User.findOne({ email: req.body.email })
-  if (!user) return res.status(400).send("Email or password is wrong");
+  if (!user) return res.status(400).send({message:"Email or password is wrong"});
 
   //Password is correct
   const validPass = await bcrypt.compare(req.body.password, user.password);
-  if (!validPass) return res.status(400).send("Password is wrong");
+  if (!validPass) return res.status(400).send({message: "Password is wrong"});
 
   //Create and assign a token
   //console.log(user.id)
